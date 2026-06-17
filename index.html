@@ -159,7 +159,7 @@
       <button onclick="unlock()">解鎖</button>
     </div>
     <div class="pw-error" id="pw-err"></div>
-    <div class="bounty">BOKU · $770 · MARINE</div>
+    <div class="bounty">William · $770 · MARINE</div>
   </div>
 </div>
 
@@ -175,7 +175,7 @@
   async function unlock() {
     const h = await sha256(document.getElementById('pw').value);
     if (h === HASH) {
-      window.location.href = 'mission.html';
+      window.location.href = 'info.html';
     } else {
       document.getElementById('pw-err').textContent = '授權碼錯誤，任務拒絕存取。';
       document.getElementById('pw').select();
