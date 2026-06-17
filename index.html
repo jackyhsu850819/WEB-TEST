@@ -159,7 +159,7 @@
       <button onclick="unlock()">解鎖</button>
     </div>
     <div class="pw-error" id="pw-err"></div>
-    <div class="bounty">William · $770 · MARINE</div>
+    <div class="bounty">BOKU · $770 · MARINE</div>
   </div>
 </div>
 
@@ -172,10 +172,23 @@
     return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
   }
 
+  function xorDecrypt(b64, key) {
+    const bytes = atob(b64);
+    let result = '';
+    for (let i = 0; i < bytes.length; i++) {
+      result += String.fromCharCode(bytes.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+    }
+    return result;
+  }
+
+  const ENCRYPTED_PATH = 'L0d/NgJfRlMtRn8xXkYAVQ==';
+
   async function unlock() {
-    const h = await sha256(document.getElementById('pw').value);
+    const pw = document.getElementById('pw').value;
+    const h = await sha256(pw);
     if (h === HASH) {
-      window.location.href = 'info.html';
+      const path = xorDecrypt(ENCRYPTED_PATH, pw);
+      window.location.href = path + '.html';
     } else {
       document.getElementById('pw-err').textContent = '授權碼錯誤，任務拒絕存取。';
       document.getElementById('pw').select();
@@ -186,7 +199,7 @@
     const diff = birthdayTarget - new Date();
     if (diff <= 0) {
       ['pw-d','pw-h','pw-m','pw-s'].forEach(id=>document.getElementById(id).textContent='00');
-      document.getElementById('pw-msg').textContent='重生日已到！';
+      document.getElementById('pw-msg').textContent='💀 末日已到！';
       return;
     }
     document.getElementById('pw-d').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
@@ -196,7 +209,7 @@
   }
   tick(); setInterval(tick,1000);
 
-  const msgs=['🎂 生日快樂？還是生日不快樂？','⏳ 時間一秒一秒流逝','😈 倒數中，準備好了嗎','🔫 $770 懸賞中'];
+  const msgs=['💀 逃不掉的','⏳ 時間一秒一秒流逝','🎂 生日快樂？還是末日？','😈 倒數中，準備好了嗎','🔫 $770 懸賞中'];
   let i=0;
   setInterval(()=>{i=(i+1)%msgs.length;document.getElementById('pw-msg').textContent=msgs[i];},3500);
 </script>
